@@ -1,93 +1,78 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-    <title>Köyümüz</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Köyümüz</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <head>
+        <title>Hedi Aydınlar Köyü</title>
+        <meta charset="utf-8">
+        <link href="design.css" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            HEDİ AYDINLAR KÖYÜ
+        </header>
+        <nav>
+            <a href="main_page.html" target="content">Ana sayfa</a>
+            <a href="about.html" target="content">Hakkımızda</a>
+            <a href="history.html" target="content">Tarihçe</a>
+            <a href="culture_and_life.html" target="content">Kültür ve Yaşam</a>
+            <a href="gallery.html" target="content">Galeri</a>
+            <a href="family_tree.html" target="content">Soy Ağacı</a>
+            <a href="announcements.html" target="content">Duyurular</a>
+            <a href="contact.html" target="content">İletişim</a>
+        </nav>
+        <main>
+            <iframe id="contentFrame" name="content" src="main_page.html"></iframe>
+        </main>
+        <footer>
+            Tüm hakları saklıdır. 2026
+        </footer>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            color: #222;
-        }
+                const links = document.querySelectorAll("nav a");
+                const iframe = document.getElementById("contentFrame");
 
-        .ana-ekran {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
+                // 🔥 SAYFA YENİDEN Mİ YÜKLENDİ YOKSA YENİDEN Mİ AÇILDI?
+                const isReload = performance.getEntriesByType("navigation")[0].type === "reload";
 
-        .bolum {
-            width: 100%;
-            padding: 24px;
-            border-bottom: 1px solid #ddd;
-            background: #fff;
-        }
+                if (!isReload) {
+                    // 👉 Site "yeni açıldı" → state sıfırla
+                    sessionStorage.removeItem("activePage");
+                }
 
-        .ust-bolum {
-            background: #2f6f3e;
-            color: #fff;
-            text-align: center;
-            padding: 32px 24px;
-        }
+                const savedPage = sessionStorage.getItem("activePage");
 
-        .menu-bolum {
-            background: #3f8a50;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-        }
+                links.forEach(l => l.classList.remove("active"));
 
-        .icerik-bolum {
-            line-height: 1.6;
-        }
+                if (savedPage) {
+                    iframe.src = savedPage;
 
-        .alt-bolum {
-            background: #1f4f2b;
-            color: #fff;
-            text-align: center;
-            border-bottom: none;
-        }
-    </style>
-</head>
-<body>
-    <h1>Köyümüze Hoş Geldiniz22</h1>
-    <p>Bu site GitHub Pages ile yayınlanmaktadır.</p>
-    <div class="ana-ekran">
-        <div class="bolum ust-bolum">
-            <h1>Köyümüze Hoş Geldiniz</h1>
-            <p>Köyümüzün resmi web sitesine hoş geldiniz.</p>
-        </div>
+                    links.forEach(link => {
+                        if (link.getAttribute("href") === savedPage) {
+                            link.classList.add("active");
+                        }
+                    });
+                } else {
+                    iframe.src = "main_page.html";
 
-        <div class="bolum menu-bolum">
-            <p>Ana Sayfa | Hakkımızda | Duyurular | İletişim</p>
-        </div>
+                    links.forEach(link => {
+                        if (link.getAttribute("href") === "main_page.html") {
+                            link.classList.add("active");
+                        }
+                    });
+                }
 
-        <div class="bolum icerik-bolum">
-            <h2>Tanıtım</h2>
-            <p>
-                Burada köyünüzle ilgili temel bilgileri, tarihçeyi, kültürel değerleri ve önemli yerleri
-                düzenli bir şekilde paylaşabilirsiniz.
-            </p>
-        </div>
+                // tıklama
+                links.forEach(link => {
+                    link.addEventListener("click", function() {
 
-        <div class="bolum icerik-bolum">
-            <h2>Duyurular</h2>
-            <p>Köydeki etkinlikler, toplantılar ve önemli haberleri bu alanda yayınlayabilirsiniz.</p>
-        </div>
+                        links.forEach(l => l.classList.remove("active"));
+                        this.classList.add("active");
 
-        <div class="bolum alt-bolum">
-            <p>© 2026 Köyümüz Web Sitesi</p>
-        </div>
-    </div>
-</body>
+                        const page = this.getAttribute("href");
+                        sessionStorage.setItem("activePage", page);
+                    });
+                });
+            });
+        </script>
+    </body>
 </html>
